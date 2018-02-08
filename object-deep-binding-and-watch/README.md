@@ -4,4 +4,10 @@
 
 实现了当数据变化为对象时的监听。
 
-实现了`$watch`和`$emit`两个api。
+实现了`$watch`api。
+
+api如下：
+
+```bash
+app.$watch(evtType, callback(newVal, oldVal))
+```
