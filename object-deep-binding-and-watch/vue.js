@@ -1,14 +1,37 @@
+// 发布-订阅类
+function Event() {
+    this.handlers = {}
+}
+
+Event.prototype.on = function (evtType, callback) {
+    if (!(evtType in this.handlers)) {
+        this.handlers[evtType] = []
+    }
+    this.handlers[evtType].push(callback)
+    return this
+}
+
+Event.prototype.emit = function (evtType, ...args) {
+    if (Object.prototype.toString.call(this.handlers[evtType]) === '[object Array]') {
+        for (const handler of this.handlers[evtType]) {
+            handler.apply(this, args)
+        }
+    }
+    return this
+}
+
+// 必须设置一个全局的EventBus，否则迭代生成的Observer类无法触发事件
+const event = new Event()
+
 // Observer构造函数
 // Observer构造函数为参数对象设置访问器属性，以实现数据观察
 function Observer(data) {
     this.data = data
-    this.handlers = {}
     this.walk(data)
+    this._eventBus = event
 }
 
-const proto = Observer.prototype
-
-proto.walk = function (data) {
+Observer.prototype.walk = function (data) {
     let val
     for (const key in data) {
         if (data.hasOwnProperty(key)) {
@@ -19,16 +42,16 @@ proto.walk = function (data) {
                 // 该构造函数调用为val对象中的属性设置getter和setter
                 new Observer(val)
             }
-
             // 调用convert函数，将对对象数据属性的访问转换为对访问器属性的访问
             this.convert(val, key)
         }
     }
 }
 
-proto.convert = function (val, key) {
-    const self = this
-    // 访问器实际上访问和修改的值是闭包val，仅仅用对象数据属性进行初始化
+Observer.prototype.convert = function (val, key) {
+    const _self = this
+    // this.data表示data对象，为data的属性设置同名的访问器属性
+    // 访问器实际上访问和修改的值是闭包val，仅仅用data对象数据属性进行初始化
     Object.defineProperty(this.data, key, {
         configurable: true,
         enumerable: true,
@@ -44,31 +67,16 @@ proto.convert = function (val, key) {
                 new Observer(v)
             }
 
+            _self._eventBus.emit(key, val, v)
+
             if (v !== val) {
                 val = v
             }
-
-            self.$emit(key, v)
         }
     })
 }
 
-proto.$watch = function (evtType, handler) {
-    // 订阅事件
-    if (!(evtType in this.handlers)) {
-        this.handlers[evtType] = []
-    }
-    this.handlers[evtType].push(handler)
-    return this
+// 只需要实现$watch的api
+Observer.prototype.$watch = function (evtType, callback) {
+    this._eventBus.on(evtType, callback)
 }
-
-proto.$emit = function (evtType, ...args) {
-    // 发布事件
-    // 判断条件的用处在于防止没有观察者时报错
-    if (Object.prototype.toString.call(this.handlers[evtType]) === '[object Array]') {
-        for (const handler of this.handlers[evtType]) {
-            handler.apply(this, args)
-        }
-    }
-}
-
