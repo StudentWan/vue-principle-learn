@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p>姓名：{{ user.name }}</p>
+        <p>年龄：{{ user.age }}</p>
+        <p>性别：{{ user.sex }}</p>
+        <p>本科：{{ user.edu.bachelor }}</p>
+        <p>研究生：{{ user.edu.master }}</p>
+    </div>
+<script src="vue.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            user: {
+                name: 'wan',
+                age: 24,
+                sex: 'male',
+                edu: {
+                    bachelor: 'UESTC',
+                    master: 'BUPT'
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>
