@@ -38,6 +38,12 @@ proto.convert = function (val, key) {
         set: function (v) {
             console.log('你设置了：' + key)
             console.log(key + ' = ' + v)
+
+            // 如果新设置的值是一个对象的话，继续监测该对象
+            if (typeof v === 'object') {
+                new Observer(v)
+            }
+
             if (v !== val) {
                 val = v
             }
