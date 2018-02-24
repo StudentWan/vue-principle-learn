@@ -2,11 +2,15 @@
 
 本仓库主要用于存放自己在学习Vue实现原理时所写的一些代码和注释。
 
-由于时间原因和一些其他因素，没有直接全面的阅读Vue源代码，而是借助一些开发者的探索和Vue源代码一起来进行学习。
-
 代码或注释中有不正确的地方欢迎PR。
 
 有疑问的地方欢迎ISSUE。
+
+### 进度
+
+- [x] 学习MVVM思想，实现简易MVVM，并撰写博客：[使用JavaScript实现简易MVVM](http://ashenone.cn/#/articles/227)
+- [x] 学习Vue数据双向绑定的源代码，掌握：`Observer`，`Dep`，`Watcher`对象
+- [x] 学习Vue数据双向绑定的源代码，理解render函数，re-render，vnode生成及patch。
 
 ### 参考资料：
 
